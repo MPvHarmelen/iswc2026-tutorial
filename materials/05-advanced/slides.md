@@ -82,7 +82,7 @@ style: |
 
 # Façade-X: Querying Any Format as a Knowledge Graph
 
-Integrate CSV, JSON, XML, spreadsheets and more using SPARQL alone.
+Session 5: Guided Excercises
 
 <div class="meta">📍 Bari, Italy &nbsp;·&nbsp; 📅 25 October 2026 &nbsp;·&nbsp; ⏱️ 14:10–18:00</div>
 
@@ -94,7 +94,7 @@ Welcome. Organised by the W3C Data Façades Community Group.
 
 ---
 
-# FX ISWC Tutorial - Hands-on with SPARQL Anything: guided exercises
+# Hands-on with SPARQL Anything: guided exercises
 
 In these exercises you build data integration pipelines with the **SPARQL Anything command line interface (CLI)**, using real data from the [Tate collection](https://github.com/tategallery/collection): artists and artworks published as CSV, JSON and Markdown (CC0).
 
