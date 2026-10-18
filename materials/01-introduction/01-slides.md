@@ -98,13 +98,15 @@ Welcome. Organised by the W3C Data Façades Community Group.
 
 **Any data format → a knowledge graph → SPARQL alone.**
 
-- The idea and its foundations
+- The Façade-X idea and its foundations
 - Hands-on with SPARQL Anything
+- (coffee break)
 - How it is used in practice, taught, and standardised
 
 <!--
 ~30 s. Keep it flat: what this afternoon is for.
 -->
+
 
 ---
 
@@ -113,12 +115,12 @@ Welcome. Organised by the W3C Data Façades Community Group.
 <table>
 <tr><th>Time</th><th>Session</th><th>Who</th></tr>
 <tr class="slot"><td>14:10–14:50</td><td colspan="2">Slot 1 · The Problem and the Idea</td></tr>
-<tr><td>14:10–14:30</td><td>Introduction to Façade-X</td><td class="who">Enrico &amp; Luigi</td></tr>
-<tr><td>14:30–14:50</td><td>Foundations: towards a theory of façade-based data access</td><td class="who">Enrico &amp; Luigi</td></tr>
+<tr><td>14:10–14:30</td><td>Introduction to Façade-X</td><td class="who">Enrico</td></tr>
+<tr><td>14:30–14:50</td><td>Foundations: towards a theory of façade-based data access</td><td class="who">Luigi</td></tr>
 <tr class="slot"><td>14:50–16:10</td><td colspan="2">Slot 2 · Hands-on with SPARQL Anything</td></tr>
 <tr><td>14:50–15:20</td><td>Live querying of CSV, JSON and XML</td><td class="who">Luigi</td></tr>
-<tr><td>15:20–15:45</td><td>Functions and magic properties</td><td class="who">Enrico</td></tr>
-<tr><td>15:45–16:10</td><td>Guided exercises with real datasets</td><td class="who">Enrico &amp; Luigi</td></tr>
+<tr><td>15:20–15:45</td><td>Functions and magic properties</td><td class="who">Luigi</td></tr>
+<tr><td>15:45–16:10</td><td>Guided exercises with real datasets</td><td class="who">Enrico</td></tr>
 <tr class="break"><td>16:10–16:30</td><td>Break · SPARQL Anything Clinic — bring your data</td><td class="who">All</td></tr>
 <tr class="slot"><td>16:30–18:00</td><td colspan="2">Slot 3 · From Practice to Standards</td></tr>
 <tr><td>16:30–17:30</td><td>Industry talks: railway KG · TriplyDB deployment · Public Procurement Data Space</td><td class="who">Mathias, Martin, Ivo</td></tr>
@@ -129,6 +131,7 @@ Welcome. Organised by the W3C Data Façades Community Group.
 <!--
 ~1 min. Point at the three slots; the break doubles as a clinic.
 -->
+
 
 ---
 
@@ -149,12 +152,19 @@ Welcome. Organised by the W3C Data Façades Community Group.
 
 ---
 
+Questions to the audience ...
+
+TODO
+
+
+---
+
 ## Before we start
 
 - **SPARQL Anything** downloaded, or **PySPARQL Anything** in Python / Jupyter
 - No local setup? A **Google Colab** notebook is available
 - Slides, notebooks and exercises: **w3c-facade-x.github.io/iswc2026-tutorial**
-- Questions any time — and keep your own data for the clinic at 16:10
+- Questions any time — and keep your own data for the clinic during the coffee break.
 
 <!--
 ~1 min. Check who has the tool running; point to Colab fallback.
