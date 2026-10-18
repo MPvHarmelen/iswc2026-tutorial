@@ -104,7 +104,19 @@ Each step is shown twice: as a terminal command (`!java -jar …`) and with [PyS
 
 ---
 
-![qr code](fx-tutorial-adv.png)
+<style>
+.flex-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 200px; /* Set a height for the container */
+}
+</style>
+<div class="flex-container">
+
+![width:400px](fx-tutorial-adv.png)
+
+</div>
 
 ---
 
