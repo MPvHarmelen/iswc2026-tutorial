@@ -139,7 +139,7 @@ Welcome. Organised by the W3C Data Façades Community Group.
 
 <div class="people">
 <div class="card"><b>Luigi Asprino</b><span class="aff">Università Telematica San Raffaele, Roma (IT)</span>Co-founder of SPARQL Anything · chair, W3C Data Façades CG</div>
-<div class="card"><b>Enrico Daga</b><span class="aff">KMi, The Open University (UK)</span>Co-founder of SPARQL Anything · KG construction for cultural heritage</div>
+<div class="card"><b>Enrico Daga</b><span class="aff">KMi, The Open University (UK)</span>Co-founder of SPARQL Anything · chair, W3C Data Façades CG</div>
 <div class="card"><b>Martin van Harmelen</b><span class="aff">Triply (NL)</span>SPARQL engine design and ELT pipelines on TriplyDB</div>
 <div class="card"><b>Mathias Vanden Auweele</b><span class="aff">MATDATA (BE)</span>Railway infrastructure data and production KGs</div>
 <div class="card"><b>Ryan Shaw</b><span class="aff">UNC Chapel Hill (US)</span>Teaches KG management with SPARQL Anything</div>
@@ -240,3 +240,190 @@ Right column: why it works, where it is used, where it is going.
 # Let's start.
 
 **w3c-facade-x.github.io/iswc2026-tutorial**
+
+---
+
+## Building a knowledge graph
+
+<style scoped>
+.flow { display: flex; align-items: center; justify-content: space-between; margin: 1em 0 1.2em; font-size: .8em; }
+.step { background: var(--bg-soft); border: 1px solid var(--line); border-top: 4px solid var(--navy); border-radius: 8px; padding: .5em .8em; text-align: center; width: 17%; }
+.step.hot { border-top-color: var(--accent); }
+.arrow { color: var(--muted); }
+</style>
+
+<div class="flow">
+<div class="step"><b>Sources</b><br>CSV, JSON, XML, DBs, APIs</div><span class="arrow">→</span>
+<div class="step"><b>Ontology</b><br>reuse or design</div><span class="arrow">→</span>
+<div class="step hot"><b>Mapping</b><br>source → ontology</div><span class="arrow">→</span>
+<div class="step"><b>Execution</b><br>materialise or virtualise</div><span class="arrow">→</span>
+<div class="step"><b>KG</b><br>validate, publish, query</div>
+</div>
+
+Every method has these steps. The **mapping** is where most of the effort goes, and where the source formats get in the way.
+
+<!--
+~1 min. Standard KGC methodology. Point at the orange box: this is what the afternoon is about.
+-->
+
+---
+
+## Mapping today
+
+- **One language per kind of source**: R2RML for databases, RML/YARRRML for files, XSPARQL for XML, SPARQL Generate…
+- **A second language next to SPARQL**, with its own syntax, tools and debugging
+- The mapping must **know the format**: JSONPath, XPath, column names, iterators
+- Often the real answer is **a script** in Python or Java
+
+The people who know the data are not always the people who can write the mapping.
+
+<!--
+~1 min. Not an attack on mapping languages: they work. The point is cost: format-specific knowledge + an extra language.
+Callback to show-of-hands Q4 if many hands went up.
+-->
+
+---
+
+## The Façade-X idea
+
+**Don't map the format. Look at every format through the same façade, then map with SPARQL.**
+
+1. **Façade**: any source is seen as RDF with *one* generic structure, whatever its format
+2. **Mapping**: a SPARQL `CONSTRUCT` from that structure to your ontology
+
+The format-specific work moves into the engine. You only write SPARQL.
+
+<!--
+~1 min. The core message of the tutorial. "Façade" = a generic view over the source, built by the engine.
+-->
+
+---
+
+## The meta-model: containers, slots, values
+
+| | What it is | In RDF |
+|---|---|---|
+| **Container** | anything that holds things: a file, a row, an object, an array, an element | a node (blank by default); the top one is `fx:root` |
+| **Slot** | a position in a container, by **number** or by **name** | `rdf:_1`, `rdf:_2`… · `xyz:name`, `xyz:born`… |
+| **Value** | the data | a literal |
+| **Type** | an optional label of a container | `rdf:type`, e.g. an XML element name |
+
+That's all. No CSV-, JSON- or XML-specific vocabulary.
+
+<!--
+~1.5 min. Four notions. Numbered slots = order (rows, arrays, children). Named slots = keys, headers, attributes.
+-->
+
+---
+
+## Same data, same façade
+
+<style scoped>
+.three { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; font-size: .55em; }
+.three pre { margin: .3em 0; }
+.three b { color: var(--navy); }
+</style>
+
+<div class="three">
+<div>
+
+<b>CSV</b> (with headers)
+```
+name,born
+Turner,1775
+```
+```turtle
+[] a fx:root ;
+  rdf:_1 [
+    xyz:name "Turner" ;
+    xyz:born "1775" ] .
+```
+
+</div>
+<div>
+
+<b>JSON</b>
+```json
+[ {"name": "Turner",
+   "born": 1775} ]
+```
+```turtle
+[] a fx:root ;
+  rdf:_1 [
+    xyz:name "Turner" ;
+    xyz:born 1775 ] .
+```
+
+</div>
+<div>
+
+<b>XML</b>
+```xml
+<artists>
+  <artist born="1775">Turner</artist>
+</artists>
+```
+```turtle
+[] a fx:root, xyz:artists ;
+  rdf:_1 [ a xyz:artist ;
+    xyz:born "1775" ;
+    rdf:_1 "Turner" ] .
+```
+
+</div>
+</div>
+
+Three formats, one shape. Only the details differ: a JSON number stays a number, an XML element keeps its name as a type.
+
+<!--
+~2 min. Let them spot the similarities first. Then the two differences: datatypes, types.
+-->
+
+---
+
+## From the façade to your knowledge graph
+
+```sparql
+CONSTRUCT {
+  ?artist a schema:Person ; schema:name ?name ; schema:birthDate ?born .
+} WHERE {
+  SERVICE <x-sparql-anything:location=artists.csv,csv.headers=true> {
+    ?row xyz:name ?name ; xyz:born ?born .
+  }
+  BIND (fx:entity(ex:, ?name) AS ?artist)
+}
+```
+
+- `SERVICE <x-sparql-anything:…>` builds the façade of the source, on the fly
+- Change `artists.csv` to `artists.json`: **the same query still works**
+- Options in the IRI (or in the query) tune the façade: headers, delimiters, HTTP, slicing…
+
+<!--
+~1.5 min. Prefixes omitted. The punchline is the second bullet.
+-->
+
+---
+
+## Why "opinionated"
+
+- **Minimal on purpose**: four notions, so users learn one model, not one per format
+- **SPARQL only**: no second language; joins, filters, functions come for free
+- **Format-agnostic queries**: the shape of the data matters, not its syntax
+- **Virtual or materialised**: query sources directly, or save the result as RDF
+- The price: some format details are left out, by design
+
+<!--
+~1 min. Be honest about the trade-off in the last bullet.
+-->
+
+---
+
+## What comes next
+
+- **Luigi**: what can we know about a query over a façade, before touching the data?
+- **Hands-on**: SPARQL Anything on CSV, JSON, XML, and the guided exercises
+- **After the break**: Façade-X in production, in teaching, and in the W3C CG
+
+<!--
+~15 s. Hand over to Luigi.
+-->
