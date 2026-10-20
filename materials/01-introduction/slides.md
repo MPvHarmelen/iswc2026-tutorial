@@ -152,10 +152,70 @@ Welcome. Organised by the W3C Data Façades Community Group.
 
 ---
 
-Questions to the audience ...
+## Show of hands ✋
 
-TODO
+<style scoped>
+ol { font-size: .95em; }
+ol li { margin: .35em 0; }
+.aside { color: var(--muted); font-size: .7em; margin-top: 1em; }
+</style>
 
+Raise your hand if you…
+
+1. have **heard of** Façade-X or SPARQL Anything before today
+2. have **tried** SPARQL Anything, even once
+3. **use** it in your work: research, a project, a product, teaching
+4. have built a knowledge graph from CSV, JSON or XML **some other way**: RML/YARRRML, SPARQL Generate, scripts…
+
+<p class="aside">And: what data gives you the most trouble? Keep it for the clinic.</p>
+
+<!--
+~1.5 min. Keep hands up and lower them step by step: 1 → 2 → 3.
+Q1 low: spend more time on the idea in the intro.
+Q3 high: ask one or two people what they use it for.
+Q4 high: the comparison with mapping languages will land; mention it explicitly.
+-->
+
+---
+
+## What you will learn today
+
+<style scoped>
+.cols { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; margin-top: .3em; }
+.col h3 { color: var(--accent); font-size: .8em; text-transform: uppercase; letter-spacing: .1em; margin: 0 0 .4em; }
+.col ul { font-size: .78em; margin: 0; padding-left: 1.1em; }
+.col li { margin: .35em 0; }
+</style>
+
+<div class="cols">
+<div class="col">
+
+### In practice
+
+- Query **CSV, JSON, XML, Markdown, APIs** as a knowledge graph, with SPARQL alone
+- Map any source to **your own vocabulary** in one `CONSTRUCT`
+- **Join formats** in a single query
+- Turn queries into **pipelines**: templates, parameters, reuse
+- Use **SPARQL Anything** from the command line and from Python
+
+</div>
+<div class="col">
+
+### Beyond practice
+
+- The **Façade-X idea**: one minimal model (containers, slots, values) for any format
+- Its **theory**: what we can know about a query before touching the data
+- How it is **deployed** in production: railways, procurement, TriplyDB
+- How it is **taught** in KG courses
+- How it is becoming a **standard**, and how to join the W3C CG
+
+</div>
+</div>
+
+<!--
+~1 min. Left column: what you take home and use on Monday.
+Right column: why it works, where it is used, where it is going.
+-->
 
 ---
 
