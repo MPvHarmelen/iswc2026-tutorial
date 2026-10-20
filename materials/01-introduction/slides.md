@@ -513,9 +513,13 @@ Turner,1775</pre>
 
 ## Read more
 
+<style scoped>
+.cards > div .contrib { display: block; margin-top: .6em; padding-top: .5em; border-top: 1px solid var(--line); color: var(--accent); font-weight: 600; }
+</style>
+
 <div class="cards two">
-  <div><b>The idea</b>Daga, E., Asprino, L., Mulholland, P., Gangemi, A.<br><i>Facade-X: an opinionated approach to SPARQL Anything.</i><br>SEMANTiCS 2021. Studies on the Semantic Web 53: 58–73.</div>
-  <div><b>The method</b>Asprino, L., Daga, E., Gangemi, A., Mulholland, P.<br><i>Knowledge graph construction with a façade: a unified method to access heterogeneous data sources on the web.</i><br>ACM Transactions on Internet Technology 23(1): 1–31, 2023.</div>
+  <div><b>The idea</b>Daga, E., Asprino, L., Mulholland, P., Gangemi, A.<br><i>Facade-X: an opinionated approach to SPARQL Anything.</i><br>SEMANTiCS 2021. Studies on the Semantic Web 53: 58–73.<span class="contrib">Introduces the Façade-X meta-model and SPARQL Anything.</span></div>
+  <div><b>The method</b>Asprino, L., Daga, E., Gangemi, A., Mulholland, P.<br><i>Knowledge graph construction with a façade: a unified method to access heterogeneous data sources on the web.</i><br>ACM Transactions on Internet Technology 23(1): 1–31, 2023.<span class="contrib">Formalises Façade-X as a KG construction method and compares it with mapping languages.</span></div>
 </div>
 
 Next, the theory: Asprino & Daga, *Towards a theory of Façade-X data access*, TGDK 2026.
