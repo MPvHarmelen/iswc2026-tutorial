@@ -59,6 +59,7 @@ style: |
   /* Agenda table */
   table { border-collapse: collapse; width: 100%; font-size: .68em; }
   th { background: var(--navy); color: #fff; text-align: left; padding: .45em .7em; }
+  section table th strong {color: #fff}
   td { padding: .35em .7em; border-bottom: 1px solid var(--line); }
   tr.slot td { background: var(--bg-soft); color: var(--navy); font-weight: 700; }
   tr.break td { background: #fdf1ea; color: var(--accent); font-weight: 600; }
@@ -94,54 +95,22 @@ Welcome. Organised by the W3C Data Façades Community Group.
 
 ---
 
-# Hands-on with SPARQL Anything: guided exercises
+## Two notebooks: pick one
 
-In these exercises you build data integration pipelines with the **SPARQL Anything command line interface (CLI)**, using real data from the [Tate collection](https://github.com/tategallery/collection): artists and artworks published as CSV, JSON and Markdown (CC0).
+Both cover the same basics: CLI and Python, CSV → KG (`csv.headers`, `fx:entity`), templates (`?_`, `-v`, `-p`), reuse (`-l`, `query=`).
+They differ in the features they touch:
 
-Each step is shown twice: as a terminal command (`!java -jar …`) and with [PySPARQL Anything](https://github.com/SPARQL-Anything/PySPARQL-Anything), the Python library that runs the same engine.
+| | **Tate** | **Nobel** |
+|---|---|---|
+| Sources | Local files: CSV, JSON, Markdown | Local CSV + live JSON API |
+| Remote data | A JSON file on the Web | An HTTP API: `media-type`, `http.query.*` |
+| Many sources | A folder as a source: `archive.matches`, nested `SERVICE` | Paging an API: `limit`/`offset`, `VALUES`, `http.sleep` |
+| Large data | Slicing ~69,000 rows: `slice`, `-st` | — |
+| Text | A Markdown file as document or as text: `txt.regex` | Values inside JSON as text: nested `SERVICE`, `txt.split`, `txt.regex` + `txt.group` |
 
-**You need:** a Google account to run the notebook in Colab, and basic SPARQL (`SELECT`, `CONSTRUCT`, `SERVICE`). Nothing to install on your machine.
-
----
-
-<style>
-.flex-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 200px; /* Set a height for the container */
-}
-</style>
-<div class="flex-container">
-
-![width:400px](fx-tutorial-adv.png)
-
+<div style="display:flex; justify-content:space-around; font-size:1.1em; font-weight:700; margin-top:.6em">
+  <span>Tate · <a href="https://bit.ly/fx-tutorial-adv">bit.ly/fx-tutorial-adv</a></span>
+  <span>Nobel · <a href="https://bit.ly/fx-tutorial-adv2">bit.ly/fx-tutorial-adv2</a></span>
 </div>
 
----
-
-## Exercises
-
-| # | Exercise | You will learn to… | Key features |
-|---|---|---|---|
-| 0 | Install the CLI | run SPARQL Anything from a single jar, and from Python | `-q`, `-f`, `fxe:content` |
-| 1 | From a CSV file to a knowledge graph | see how Façade-X represents a table, and map it to your own vocabulary | `csv.headers`, `csv.null-string`, `fx:cardinal`, `fx:entity`, `-o` |
-| 2 | Two formats, one query | join JSON from the Web with a local CSV in a single query | `rdfs:member`, remote `location`, datatypes in joins |
-| 3 | From a query to a pipeline | turn a query into a template and run it once per row of a result set | `?_` parameters, `-v`, `-p` |
-| 4 | A folder as a data source | query every file in a folder with one query | folders, `archive.matches`, nested `SERVICE` |
-| 5 | Reuse what you built | query the RDF you produced and use a saved query as a source | `-l`, `query=` |
-| 6 | Scaling up | convert ~69,000 rows with limited memory, and turn the graph back into a table | `slice`, `-st`, `-f CSV` |
-| 7 | Documents and text | read the same file as a structured document or as plain text | Markdown, `media-type`, `txt.regex` |
-
-Exercises **0–3** are the core (about 30 minutes). Exercises **4–7** go further (another 30 minutes).
-
---
-
-## The notebook: **https://bit.ly/fx-tutorial-adv**
-
-- Run the cells in order: later exercises reuse files created earlier.
-- `%%writefile` cells save a query to a file; the cells after them run it.
-- Cells marked `# YOUR CODE HERE` are for you to try.
-- To change the SPARQL Anything version, edit the download URL in exercise 0.
-- Reference documentation: [sparql-anything.cc](https://sparql-anything.cc)
-
+**✋ Show of hands: files and scale (Tate) or APIs and HTTP (Nobel)?**
