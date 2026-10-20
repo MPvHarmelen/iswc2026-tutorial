@@ -454,12 +454,12 @@ Turner,1775</pre>
 <div>
 <h4>XML</h4>
 <pre>&lt;artists&gt;
-  &lt;artist born="1775"&gt;Turner&lt;/artist&gt;
+  &lt;artist name="Turner" born="1775"/&gt;
 &lt;/artists&gt;</pre>
 <pre>[] a fx:root, <span class="diff">xyz:artists</span> ;
   rdf:_1 [ a <span class="diff">xyz:artist</span> ;
-    xyz:born "1775" ;
-    rdf:_1 "Turner" ] .</pre>
+    xyz:name "Turner" ;
+    xyz:born "1775" ] .</pre>
 </div>
 </div>
 
@@ -468,7 +468,6 @@ Turner,1775</pre>
 <!--
 ~1.5 min. Ask: what's different? JSON keeps the number type; XML keeps element names as types.
 -->
-
 ---
 
 ## One query, both jobs
@@ -488,7 +487,7 @@ Turner,1775</pre>
   <div class="box re"><b>artists.json</b></div>
   <span class="arr">⇄</span>
   <div class="box re"><b>artists.xml</b>*</div>
-  <span style="margin-left:1em">Change the <span class="re-t">source</span>: the <span class="rm-t">mapping</span> stays.</span>
+  <span style="margin-left:1em">Change the <span class="re-t">format</span>: the <span class="rm-t">mapping</span> stays.</span>
 </div>
 
 <!--
