@@ -73,6 +73,33 @@ style: |
   }
   .card b { color: var(--navy); font-size: 1.2em; display: block; }
   .card .aff { color: var(--muted); display: block; margin-bottom: .3em; }
+  
+  /* Diagrams: blue = re-engineering, orange = re-modelling */
+  .flow { display: flex; align-items: center; justify-content: center; gap: 14px; margin: .8em 0; font-size: .75em; }
+  .box { background: var(--bg-soft); border: 2px solid var(--line); border-radius: 10px; padding: .5em .9em; text-align: center; }
+  .box b { display: block; color: var(--navy); }
+  .box.re { border-color: var(--navy-2); background: #e8f0f7; }
+  .box.rm { border-color: var(--accent); background: #fdf1ea; }
+  .box.both { background: linear-gradient(90deg, #e8f0f7 50%, #fdf1ea 50%); border-color: var(--muted); }
+  .box small { color: var(--muted); display: block; }
+  .arr { color: var(--muted); font-size: 1.4em; }
+  .re-t { color: var(--navy-2); font-weight: 700; }
+  .rm-t { color: var(--accent); font-weight: 700; }
+  pre.q { font-size: .62em; line-height: 1.45; background: #f7f9fb; border: 1px solid var(--line); border-radius: 8px; padding: .8em 1em; }
+  pre.q .re { background: #e8f0f7; color: var(--navy-2); }
+  pre.q .rm { background: #fdf1ea; color: #b34d1c; }
+  .cards { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-top: .6em; }
+  .cards.two { grid-template-columns: 1fr 1fr; }
+  .cards > div { background: var(--bg-soft); border: 1px solid var(--line); border-top: 4px solid var(--accent); border-radius: 8px; padding: .6em .8em; font-size: .62em; line-height: 1.4; }
+  .cards > div b { color: var(--navy); font-size: 1.25em; display: block; margin-bottom: .3em; }
+  .cite { color: var(--muted); font-size: .55em; position: absolute; bottom: 70px; left: 70px; }
+  .mm { display: flex; align-items: center; justify-content: center; gap: 10px; font-size: .72em; margin: .8em 0; }
+  .mm .c { border: 2px solid var(--navy-2); border-radius: 10px; padding: .6em .9em; background: #e8f0f7; text-align: center; }
+  .mm .s { color: var(--accent); font-family: monospace; font-weight: 700; white-space: nowrap; }
+  .mm .s::after { content: " →"; color: var(--muted); }
+  .mm .v { background: #fff; border: 1px dashed var(--muted); border-radius: 20px; padding: .2em .8em; font-family: monospace; }
+  .mm .rows > div { display: flex; align-items: center; gap: 10px; margin: .4em 0; }
+
 ---
 
 <!-- _class: hero -->
@@ -243,75 +270,102 @@ Right column: why it works, where it is used, where it is going.
 
 ---
 
-## Building a knowledge graph
-
-<style scoped>
-.flow { display: flex; align-items: center; justify-content: space-between; margin: 1em 0 1.2em; font-size: .8em; }
-.step { background: var(--bg-soft); border: 1px solid var(--line); border-top: 4px solid var(--navy); border-radius: 8px; padding: .5em .8em; text-align: center; width: 17%; }
-.step.hot { border-top-color: var(--accent); }
-.arrow { color: var(--muted); }
-</style>
+## Building a knowledge graph: two different jobs
 
 <div class="flow">
-<div class="step"><b>Sources</b><br>CSV, JSON, XML, DBs, APIs</div><span class="arrow">→</span>
-<div class="step"><b>Ontology</b><br>reuse or design</div><span class="arrow">→</span>
-<div class="step hot"><b>Mapping</b><br>source → ontology</div><span class="arrow">→</span>
-<div class="step"><b>Execution</b><br>materialise or virtualise</div><span class="arrow">→</span>
-<div class="step"><b>KG</b><br>validate, publish, query</div>
+  <div class="box"><b>Data source</b><small>CSV, JSON, XML, API…</small></div>
+  <span class="arr">→</span>
+  <div class="box re"><b>Re-engineering</b><small>format → RDF<br>syntax, structure</small></div>
+  <span class="arr">→</span>
+  <div class="box"><b>RDF</b><small>same content,<br>source structure</small></div>
+  <span class="arr">→</span>
+  <div class="box rm"><b>Re-modelling</b><small>RDF → ontology<br>meaning, vocabulary</small></div>
+  <span class="arr">→</span>
+  <div class="box"><b>Knowledge graph</b></div>
 </div>
 
-Every method has these steps. The **mapping** is where most of the effort goes, and where the source formats get in the way.
+<span class="re-t">Re-engineering</span> depends on the **format**. <span class="rm-t">Re-modelling</span> depends on the **domain**.
+Different skills, different people.
 
 <!--
-~1 min. Standard KGC methodology. Point at the orange box: this is what the afternoon is about.
+~1 min. The methodological point of the whole approach: these are distinct concerns.
 -->
 
 ---
 
-## Mapping today
+## Most approaches merge them
 
-- **One language per kind of source**: R2RML for databases, RML/YARRRML for files, XSPARQL for XML, SPARQL Generate…
-- **A second language next to SPARQL**, with its own syntax, tools and debugging
-- The mapping must **know the format**: JSONPath, XPath, column names, iterators
-- Often the real answer is **a script** in Python or Java
+<div class="flow">
+  <div class="box"><b>JSON file</b></div>
+  <span class="arr">→</span>
+  <div class="box both" style="padding:.8em 1.4em"><b>One mapping rule</b><small>format access + ontology, together</small></div>
+  <span class="arr">→</span>
+  <div class="box"><b>Knowledge graph</b></div>
+</div>
 
-The people who know the data are not always the people who can write the mapping.
+<pre class="q">mappings:
+  artist:
+    sources:
+      - [<span class="re">artists.json~jsonpath</span>, <span class="re">'$[*]'</span>]
+    s: <span class="rm">ex:</span><span class="re">$(name)</span>
+    po:
+      - [<span class="rm">a</span>, <span class="rm">schema:Person</span>]
+      - [<span class="rm">schema:name</span>, <span class="re">$(name)</span>]</pre>
+
+Same for R2RML, RML, XSPARQL, scripts. **New format → new rule.** And a second language next to SPARQL.
 
 <!--
-~1 min. Not an attack on mapping languages: they work. The point is cost: format-specific knowledge + an extra language.
-Callback to show-of-hands Q4 if many hands went up.
+~1 min. YARRRML as an example, not as a target. Point at how blue and orange are interleaved in every line.
 -->
 
 ---
 
-## The Façade-X idea
+## Façade-X: keep them apart
 
-**Don't map the format. Look at every format through the same façade, then map with SPARQL.**
+<div class="flow">
+  <div class="box"><b>Any source</b><small>CSV, JSON, XML,<br>HTML, XLSX, text…</small></div>
+  <span class="arr">→</span>
+  <div class="box re"><b>Façade</b><small>generic RDF view<br><b>done by the engine</b></small></div>
+  <span class="arr">→</span>
+  <div class="box rm"><b>SPARQL CONSTRUCT</b><small>to your ontology<br><b>done by you</b></small></div>
+  <span class="arr">→</span>
+  <div class="box"><b>Knowledge graph</b></div>
+</div>
 
-1. **Façade**: any source is seen as RDF with *one* generic structure, whatever its format
-2. **Mapping**: a SPARQL `CONSTRUCT` from that structure to your ontology
+<div class="cards two" style="margin-top:1em">
+  <div style="border-top-color:var(--navy-2)"><b>Re-engineering → the façade</b>One generic structure for every format. No format knowledge in your queries.</div>
+  <div><b>Re-modelling → SPARQL</b>The language you already know. Joins, filters and functions come for free.</div>
+</div>
 
-The format-specific work moves into the engine. You only write SPARQL.
+<p class="cite">Daga, Asprino, Mulholland, Gangemi. Facade-X: an opinionated approach to SPARQL Anything. SEMANTiCS 2021.</p>
 
 <!--
-~1 min. The core message of the tutorial. "Façade" = a generic view over the source, built by the engine.
+~1 min. The core message of the tutorial.
 -->
 
 ---
 
 ## The meta-model: containers, slots, values
 
-| | What it is | In RDF |
-|---|---|---|
-| **Container** | anything that holds things: a file, a row, an object, an array, an element | a node (blank by default); the top one is `fx:root` |
-| **Slot** | a position in a container, by **number** or by **name** | `rdf:_1`, `rdf:_2`… · `xyz:name`, `xyz:born`… |
-| **Value** | the data | a literal |
-| **Type** | an optional label of a container | `rdf:type`, e.g. an XML element name |
+<div class="mm">
+  <div class="c">container<br><code>fx:root</code></div>
+  <span class="s">rdf:_1</span>
+  <div class="c">container</div>
+  <div class="rows">
+    <div><span class="s">xyz:name</span><span class="v">"Turner"</span></div>
+    <div><span class="s">xyz:born</span><span class="v">"1775"</span></div>
+  </div>
+</div>
 
-That's all. No CSV-, JSON- or XML-specific vocabulary.
+<div class="cards">
+  <div style="border-top-color:var(--navy-2)"><b>Container</b>A file, a row, an object, an array, an element.</div>
+  <div><b>Slot · by number</b><code>rdf:_1</code>, <code>rdf:_2</code>… order: rows, array items, children.</div>
+  <div><b>Slot · by name</b><code>xyz:name</code>… keys, headers, attributes.</div>
+  <div style="border-top-color:var(--muted)"><b>Value</b>A literal. A container may also have a <b>type</b>.</div>
+</div>
 
 <!--
-~1.5 min. Four notions. Numbered slots = order (rows, arrays, children). Named slots = keys, headers, attributes.
+~1.5 min. Four notions, nothing format-specific. Walk the diagram left to right.
 -->
 
 ---
@@ -321,108 +375,114 @@ That's all. No CSV-, JSON- or XML-specific vocabulary.
 <style scoped>
 .three { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; font-size: .55em; }
 .three pre { margin: .3em 0; }
-.three b { color: var(--navy); }
+.three h4 { color: var(--navy); margin: 0; font-size: 1.3em; }
+.diff { background: #fdf1ea; color: #b34d1c; font-weight: 700; }
 </style>
 
 <div class="three">
 <div>
-
-<b>CSV</b> (with headers)
-```
-name,born
-Turner,1775
-```
-```turtle
-[] a fx:root ;
+<h4>CSV</h4>
+<pre>name,born
+Turner,1775</pre>
+<pre>[] a fx:root ;
   rdf:_1 [
     xyz:name "Turner" ;
-    xyz:born "1775" ] .
-```
-
+    xyz:born "1775" ] .</pre>
 </div>
 <div>
-
-<b>JSON</b>
-```json
-[ {"name": "Turner",
-   "born": 1775} ]
-```
-```turtle
-[] a fx:root ;
+<h4>JSON</h4>
+<pre>[ {"name": "Turner",
+   "born": 1775} ]</pre>
+<pre>[] a fx:root ;
   rdf:_1 [
     xyz:name "Turner" ;
-    xyz:born 1775 ] .
-```
-
+    xyz:born <span class="diff">"1775"^^xsd:decimal</span> ] .</pre>
 </div>
 <div>
-
-<b>XML</b>
-```xml
-<artists>
-  <artist born="1775">Turner</artist>
-</artists>
-```
-```turtle
-[] a fx:root, xyz:artists ;
-  rdf:_1 [ a xyz:artist ;
+<h4>XML</h4>
+<pre>&lt;artists&gt;
+  &lt;artist born="1775"&gt;Turner&lt;/artist&gt;
+&lt;/artists&gt;</pre>
+<pre>[] a fx:root, <span class="diff">xyz:artists</span> ;
+  rdf:_1 [ a <span class="diff">xyz:artist</span> ;
     xyz:born "1775" ;
-    rdf:_1 "Turner" ] .
-```
-
+    rdf:_1 "Turner" ] .</pre>
 </div>
 </div>
 
-Three formats, one shape. Only the details differ: a JSON number stays a number, an XML element keeps its name as a type.
+**Three formats, one shape.** The highlighted parts are the only differences.
 
 <!--
-~2 min. Let them spot the similarities first. Then the two differences: datatypes, types.
+~1.5 min. Ask: what's different? JSON keeps the number type; XML keeps element names as types.
 -->
 
 ---
 
-## From the façade to your knowledge graph
+## One query, both jobs
 
-```sparql
-CONSTRUCT {
-  ?artist a schema:Person ; schema:name ?name ; schema:birthDate ?born .
-} WHERE {
-  SERVICE <x-sparql-anything:location=artists.csv,csv.headers=true> {
-    ?row xyz:name ?name ; xyz:born ?born .
-  }
-  BIND (fx:entity(ex:, ?name) AS ?artist)
-}
-```
+<pre class="q"><span class="rm">CONSTRUCT {</span>
+<span class="rm">  ?artist a schema:Person ; schema:name ?name ; schema:birthDate ?born .</span>
+<span class="rm">}</span> WHERE {
+<span class="re">  SERVICE &lt;x-sparql-anything:location=artists.csv,csv.headers=true&gt; {</span>
+<span class="re">    ?row xyz:name ?name ; xyz:born ?born .</span>
+<span class="re">  }</span>
+<span class="rm">  BIND (fx:entity(ex:, ?name) AS ?artist)</span>
+}</pre>
 
-- `SERVICE <x-sparql-anything:…>` builds the façade of the source, on the fly
-- Change `artists.csv` to `artists.json`: **the same query still works**
-- Options in the IRI (or in the query) tune the façade: headers, delimiters, HTTP, slicing…
+<div class="flow" style="font-size:.7em">
+  <div class="box re"><b>artists.csv</b></div>
+  <span class="arr">⇄</span>
+  <div class="box re"><b>artists.json</b></div>
+  <span class="arr">⇄</span>
+  <div class="box re"><b>artists.xml</b>*</div>
+  <span style="margin-left:1em">Change the <span class="re-t">source</span>: the <span class="rm-t">mapping</span> stays.</span>
+</div>
 
 <!--
-~1.5 min. Prefixes omitted. The punchline is the second bullet.
+~1 min. Prefixes omitted. *XML has a different shape (attribute + text), so that pattern needs one small change: honest point.
 -->
 
 ---
 
 ## Why "opinionated"
 
-- **Minimal on purpose**: four notions, so users learn one model, not one per format
-- **SPARQL only**: no second language; joins, filters, functions come for free
-- **Format-agnostic queries**: the shape of the data matters, not its syntax
-- **Virtual or materialised**: query sources directly, or save the result as RDF
-- The price: some format details are left out, by design
+<div class="cards">
+  <div><b>Minimal</b>Four notions. Learn one model, not one per format.</div>
+  <div><b>SPARQL only</b>No second language. All of SPARQL is available.</div>
+  <div><b>Virtual or materialised</b>Query sources directly, or save the result as RDF.</div>
+  <div style="border-top-color:var(--muted)"><b>The price</b>Some format details are left out, by design.</div>
+</div>
 
 <!--
-~1 min. Be honest about the trade-off in the last bullet.
+~45 s. Be honest about the trade-off.
+-->
+
+---
+
+## Read more
+
+<div class="cards two">
+  <div><b>The idea</b>Daga, E., Asprino, L., Mulholland, P., Gangemi, A.<br><i>Facade-X: an opinionated approach to SPARQL Anything.</i><br>SEMANTiCS 2021. Studies on the Semantic Web 53: 58–73.</div>
+  <div><b>The method</b>Asprino, L., Daga, E., Gangemi, A., Mulholland, P.<br><i>Knowledge graph construction with a façade: a unified method to access heterogeneous data sources on the web.</i><br>ACM Transactions on Internet Technology 23(1): 1–31, 2023.</div>
+</div>
+
+Next, the theory: Asprino & Daga, *Towards a theory of Façade-X data access*, TGDK 2026.
+
+<!--
+~15 s. Don't read them; they're on the website.
 -->
 
 ---
 
 ## What comes next
 
-- **Luigi**: what can we know about a query over a façade, before touching the data?
-- **Hands-on**: SPARQL Anything on CSV, JSON, XML, and the guided exercises
-- **After the break**: Façade-X in production, in teaching, and in the W3C CG
+<div class="flow">
+  <div class="box re"><b>Luigi</b><small>theory: what can we know<br>about a query before<br>touching the data?</small></div>
+  <span class="arr">→</span>
+  <div class="box rm"><b>Hands-on</b><small>CSV, JSON, XML,<br>functions, exercises</small></div>
+  <span class="arr">→</span>
+  <div class="box"><b>After the break</b><small>production, teaching,<br>W3C CG</small></div>
+</div>
 
 <!--
 ~15 s. Hand over to Luigi.
