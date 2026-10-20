@@ -270,27 +270,80 @@ Right column: why it works, where it is used, where it is going.
 
 ---
 
-## Building a knowledge graph: two different jobs
+## Building a knowledge graph: the usual way
+
+<style scoped>
+.stack { display: flex; flex-direction: column; gap: 8px; }
+.stack .box { padding: .35em .8em; }
+.cards > div { border-top-color: #c0392b; }
+</style>
 
 <div class="flow">
-  <div class="box"><b>Data source</b><small>CSV, JSON, XML, API…</small></div>
+  <div class="stack">
+    <div class="box"><b>CSV</b></div>
+    <div class="box"><b>JSON</b></div>
+    <div class="box"><b>XML</b></div>
+  </div>
   <span class="arr">→</span>
-  <div class="box re"><b>Re-engineering</b><small>format → RDF<br>syntax, structure</small></div>
-  <span class="arr">→</span>
-  <div class="box"><b>RDF</b><small>same content,<br>source structure</small></div>
-  <span class="arr">→</span>
-  <div class="box rm"><b>Re-modelling</b><small>RDF → ontology<br>meaning, vocabulary</small></div>
+  <div class="stack">
+    <div class="box both"><b>CSV mapping</b><small>columns + ontology</small></div>
+    <div class="box both"><b>JSON mapping</b><small>JSONPath + ontology</small></div>
+    <div class="box both"><b>XML mapping</b><small>XPath + ontology</small></div>
+  </div>
   <span class="arr">→</span>
   <div class="box"><b>Knowledge graph</b></div>
 </div>
 
-<span class="re-t">Re-engineering</span> depends on the **format**. <span class="rm-t">Re-modelling</span> depends on the **domain**.
-Different skills, different people.
+<span class="re-t">Re-engineering</span> and <span class="rm-t">re-modelling</span> in the same artefact. Why is it a problem?
+
+<div class="cards">
+  <div><b>One mapping per format</b>New format, or a format change: rewrite the mapping.</div>
+  <div><b>Two skills, one artefact</b>Format expert and domain expert must edit the same rules.</div>
+  <div><b>A second language</b>RML, R2RML, XSPARQL… next to SPARQL, with their own tools.</div>
+  <div><b>Hard to maintain</b>Change the ontology: touch format code. Change the format: touch the ontology.</div>
+</div>
 
 <!--
-~1 min. The methodological point of the whole approach: these are distinct concerns.
+~1.5 min. Same ontology, three mappings, each mixing blue and orange.
 -->
 
+---
+
+## Building a knowledge graph: with Façade-X
+
+<style scoped>
+.stack { display: flex; flex-direction: column; gap: 8px; }
+.stack .box { padding: .35em .8em; }
+</style>
+
+<div class="flow">
+  <div class="stack">
+    <div class="box"><b>CSV</b></div>
+    <div class="box"><b>JSON</b></div>
+    <div class="box"><b>XML</b></div>
+  </div>
+  <span class="arr">→</span>
+  <div class="box re" style="align-self:stretch;display:flex;flex-direction:column;justify-content:center"><b>Façade</b><small>re-engineering<br>by the engine</small></div>
+  <span class="arr">→</span>
+  <div class="box"><b>RDF</b><small>one generic shape</small></div>
+  <span class="arr">→</span>
+  <div class="box rm"><b>SPARQL CONSTRUCT</b><small>re-modelling<br>by you</small></div>
+  <span class="arr">→</span>
+  <div class="box"><b>Knowledge graph</b></div>
+</div>
+
+<div class="cards">
+  <div style="border-top-color:var(--navy-2)"><b>Formats handled once</b>In the engine, for everyone. No format code in your mapping.</div>
+  <div><b>One skill per step</b>You write only the re-modelling: your domain, your ontology.</div>
+  <div><b>SPARQL only</b>The language you already know, with all its features.</div>
+  <div><b>Easy to maintain</b>Change the source: keep the mapping. Change the ontology: keep the source.</div>
+</div>
+
+<p class="cite">Daga et al., SEMANTiCS 2021 · Asprino et al., ACM TOIT 2023</p>
+
+<!--
+~1.5 min. Point-by-point answer to the previous slide: the four cards line up with the four problems.
+-->
 ---
 
 ## Most approaches merge them
